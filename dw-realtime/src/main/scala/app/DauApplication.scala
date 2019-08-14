@@ -7,8 +7,9 @@ import java.util.Date
 import bean.StartUpLog
 import com.alibaba.fastjson.JSON
 import constant.GmallConstants
-import org.apache.hadoop.yarn.webapp.example.MyApp.MyController
+import org.apache.hadoop.conf.Configuration
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.phoenix.spark._
 import org.apache.spark.SparkConf
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
@@ -58,6 +59,7 @@ object DauApplication {
 
     //根据mid去重，记录每天访问过的mid，形成一个列表存入Redis，形成dau-date-mid，一对多结构，mid不重复，使用set。形成一个访问清单
     //在存入Redis之前先过滤掉不符合结构的数据
+    //去重：两次过滤：批次之间、批次内；一次保存清单
 
     //transform作用：一个批次执行一次；降低查询频率
     val filterDStream: DStream[StartUpLog] = startupLogDStream.transform {
@@ -79,7 +81,7 @@ object DauApplication {
 
         //过滤数据
         val filteredRDD: RDD[StartUpLog] = rdd.filter {
-              //TODO ？？取出的集合中是否包含传入的mid
+          //TODO ？？取出的集合中是否包含传入的mid
           startupLog => !dauBC.value.contains(startupLog.mid)
         }
 
@@ -89,7 +91,7 @@ object DauApplication {
     }
 
     //按照Key分组，每组取一个
-    val groupByMidDStream: DStream[(String, Iterable[StartUpLog])] = filterDStream.map(log=>(log.mid, log)).groupByKey()
+    val groupByMidDStream: DStream[(String, Iterable[StartUpLog])] = filterDStream.map(log => (log.mid, log)).groupByKey()
     val realFilterDStream: DStream[StartUpLog] = groupByMidDStream.flatMap {
       case (mid, startLogItr) => startLogItr.take(1)
     }
@@ -109,7 +111,7 @@ object DauApplication {
             for (log <- startupItr) {
               //设计key，dau:2019-08-13 value
               val dauKey: String = "dau:" + log.logDate
-//              println(dauKey + ":::" + log.mid)
+              //              println(dauKey + ":::" + log.mid)
 
               //向redis中存入数据
               jedis.sadd(dauKey, log.mid)
@@ -121,6 +123,16 @@ object DauApplication {
         }
       }
     }
+
+    //将数据写入hbase 和 phoenix
+    realFilterDStream.foreachRDD {
+      rdd => {
+        rdd.saveToPhoenix("gmall2019_dau",
+          Seq("MID", "UID", "APPID", "AREA", "OS", "CH", "TYPE", "VS", "LOGDATE", "LOGHOUR", "TS"),
+          new Configuration, Some("hadoop102,hadoop103,hadoop104:2181"))
+      }
+    }
+
 
     println("流程启动")
     ssc.start()
