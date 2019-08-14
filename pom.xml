@@ -14,7 +14,6 @@
         <module>dw-mock</module>
         <module>dw-realtime</module>
         <module>dw-publisher</module>
-        <module>dw-canal</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
