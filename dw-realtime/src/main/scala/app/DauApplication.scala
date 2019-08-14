@@ -54,10 +54,13 @@ object DauApplication {
       }
     }
 
+
+
     //根据mid去重，记录每天访问过的mid，形成一个列表存入Redis，形成dau-date-mid，一对多结构，mid不重复，使用set。形成一个访问清单
     //在存入Redis之前先过滤掉不符合结构的数据
 
-    startupLogDStream.transform {
+    //transform作用：一个批次执行一次；降低查询频率
+    val filterDStream: DStream[StartUpLog] = startupLogDStream.transform {
       rdd => {
         println("过滤前数据量： " + rdd.count())
 
@@ -65,7 +68,9 @@ object DauApplication {
         //建立Redis连接
         val jedis: Jedis = new Jedis("hadoop102", 6379)
 
+        //取当前系统时间
         val dauKey: String = "dau: " + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
+        //取当前系统访问过的清单集合
         val dauSet: util.Set[String] = jedis.smembers(dauKey)
         //创建广播变量
         val dauBC: Broadcast[util.Set[String]] = ssc.sparkContext.broadcast(dauSet)
@@ -74,6 +79,7 @@ object DauApplication {
 
         //过滤数据
         val filteredRDD: RDD[StartUpLog] = rdd.filter {
+              //TODO ？？取出的集合中是否包含传入的mid
           startupLog => !dauBC.value.contains(startupLog.mid)
         }
 
@@ -82,8 +88,17 @@ object DauApplication {
       }
     }
 
+    //按照Key分组，每组取一个
+    val groupByMidDStream: DStream[(String, Iterable[StartUpLog])] = filterDStream.map(log=>(log.mid, log)).groupByKey()
+    val realFilterDStream: DStream[StartUpLog] = groupByMidDStream.flatMap {
+      case (mid, startLogItr) => startLogItr.take(1)
+    }
+
+    //多次使用，缓存
+    realFilterDStream.cache()
+
     //过滤后数据存入Redis
-    val realFilterDStream: Unit = startupLogDStream.foreachRDD {
+    realFilterDStream.foreachRDD {
       rdd => {
 
         rdd.foreachPartition {
@@ -94,7 +109,7 @@ object DauApplication {
             for (log <- startupItr) {
               //设计key，dau:2019-08-13 value
               val dauKey: String = "dau:" + log.logDate
-              println(dauKey + ":::" + log.mid)
+//              println(dauKey + ":::" + log.mid)
 
               //向redis中存入数据
               jedis.sadd(dauKey, log.mid)
@@ -106,7 +121,6 @@ object DauApplication {
         }
       }
     }
-    realFilterDStream
 
     println("流程启动")
     ssc.start()
