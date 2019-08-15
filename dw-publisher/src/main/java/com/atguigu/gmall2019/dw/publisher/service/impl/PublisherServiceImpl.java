@@ -10,9 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//业务层，处理业务逻辑
+//publisherService的实现类
+//Service：定义为容器的组件
 @Service
 public class PublisherServiceImpl implements PublisherService {
 
+    //自动注入，直接使用DauMapper
     @Autowired
     DauMapper dauMapper;
 

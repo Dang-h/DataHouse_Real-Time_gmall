@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//实现Web接口
+//控制层，对外发布外界接口；实现Web接口
 @RestController
 public class PubliherController {
 
@@ -33,22 +33,25 @@ public class PubliherController {
 
         //做一个Map
         //设计返回结果Json
+        //{"id":"dau","name":"新增日活","value":1200}
         Map dauMap = new HashMap();
         dauMap.put("id","dau");
         dauMap.put("name", "新增日活");
         dauMap.put("value", dauTotal);
         totalList.add(dauMap);
 
+        //"id":"new_mid","name":"新增设备","value":233}
         Map newMidMap = new HashMap();
-        dauMap.put("id","new_mid");
-        dauMap.put("name", "新增设备");
-        dauMap.put("value", 23333);
+        newMidMap.put("id","new_mid");
+        newMidMap.put("name", "新增设备");
+        newMidMap.put("value", 23333);
         totalList.add(newMidMap);
 
         //将Map转换成Json结果集返回
         return JSON.toJSONString(totalList);
     }
 
+    //统计分时数据
     @GetMapping("realtime-hour")
     public String getRealtimeHour(@RequestParam("id") String id, @RequestParam("date") String tdate){
 

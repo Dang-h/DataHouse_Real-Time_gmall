@@ -10,6 +10,6 @@ public interface PublisherService {
     //获取Dau总数
     public Long getDauTotal(String date);
 
-    //获取小时数
+    //分时统计
     public Map<String, Long> getDauHourCount(String date);
 }
