@@ -10,7 +10,7 @@
         group by loghour
     </select>
 
-<!--    autoMapping 自动命名， 数据库字段名称是什么，映射成的key就是什么，value就为key下对应的值-->
+<!--    autoMapping 自动命名， 数据库字段名称是什么，映射成的Java的map的key就是什么，value就为key下对应的值-->
     <resultMap id="hourMap" type="java.util.Map" autoMapping="true">
     <!--  手动重命名      -->
 <!--        <result column="LOGHOUR" property="lohHour"></result>-->
