@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>dw-common</module>
+        <module>dw-canal</module>
         <module>dw-logger</module>
         <module>dw-mock</module>
         <module>dw-realtime</module>
