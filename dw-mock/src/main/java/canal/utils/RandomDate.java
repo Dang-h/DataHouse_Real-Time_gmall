@@ -1,4 +1,4 @@
-package utils;
+package canal.utils;
 
 import java.util.Date;
 import java.util.Random;
