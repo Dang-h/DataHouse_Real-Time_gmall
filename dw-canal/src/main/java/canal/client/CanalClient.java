@@ -12,7 +12,10 @@ import java.util.List;
 
 public class CanalClient {
     public static void main(String[] args) {
-
+/*
+* all of life is a act of letting go ,but what hurts most is not taking a moment to say goodbye!!
+*
+* */
         //建立连接器
         CanalConnector canalConnector = CanalConnectors.newSingleConnector(new InetSocketAddress("hadoop102", 11111), "example", "", "");
 
