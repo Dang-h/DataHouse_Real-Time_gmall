@@ -1,4 +1,4 @@
-package canal.utils;
+package utils;
 
 public class RanOpt<T>{
     T value ;

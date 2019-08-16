@@ -2,10 +2,10 @@ package application;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import canal.utils.LogUploader;
-import canal.utils.RanOpt;
-import canal.utils.RandomDate;
-import canal.utils.RandomNum;
+import utils.LogUploader;
+import utils.RanOpt;
+import utils.RandomDate;
+import utils.RandomNum;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -126,7 +126,7 @@ public class JsonMocker {
 
 
         String mid = "mid_" + RandomNum.getRandInt(1, 500);
-        String uid = "uid_" + RandomNum.getRandInt(1, 500);
+        String uid = "" + RandomNum.getRandInt(1, 500);
         String os = osOptionGroup.getRandomOpt().getValue();
         String appid = this.appId;
         String area = areaOptionGroup.getRandomOpt().getValue();

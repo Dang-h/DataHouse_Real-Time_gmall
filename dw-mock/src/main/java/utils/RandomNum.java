@@ -1,4 +1,4 @@
-package canal.utils;
+package utils;
 
 import java.util.Random;
 

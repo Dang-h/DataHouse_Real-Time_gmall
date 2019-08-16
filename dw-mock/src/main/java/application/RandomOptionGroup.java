@@ -1,6 +1,6 @@
 package application;
 
-import canal.utils.RanOpt;
+import utils.RanOpt;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package canal.utils;
+package utils;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
