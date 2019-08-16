@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace：需要实现的类-->
+<mapper namespace="com.atguigu.gmall2019.dw.publisher.mapper.DauMapper">
+    <!--  id：需要实现的方法名； resultType：定义传出的类型（Java类型），一个值为Type，多个值为resultMap  -->
+    <select id="getDauTotal" resultType="java.lang.Long">
+        select count(*) cnt from gmall2019_dau where logdate=#{date}
+    </select>
+
+    <select id="getDauHourCount" resultMap="hourMap">
+        select loghour, count(*) cnt from gmall2019_dau where logdate=#{date}
+        group by loghour
+    </select>
+
+    <!--  重新定义resultMap  -->
+    <!--    autoMapping 自动命名， 数据库字段名称是什么，映射成的Java的map的key就是什么，value就为key下对应的值-->
+    <resultMap id="hourMap" type="java.util.Map" autoMapping="true">
+        <!--  手动重命名      -->
+        <!--  <result column="LOGHOUR" property="lohHour"></result>-->
+        <!--  <result column="CNT" property="cnt"></result>-->
+    </resultMap>
+
+</mapper>
