@@ -21,5 +21,4 @@ case class OrderInfo(
                       trade_body: String,
                       var create_date: String,
                       var create_hour: String
-
                     )

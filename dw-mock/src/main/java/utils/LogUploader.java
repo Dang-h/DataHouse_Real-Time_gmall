@@ -6,9 +6,10 @@ import java.net.URL;
 
 public class LogUploader {
 
-
-
-
+    /**
+     * 把传入的log JSON串封装成一个http请求便于网络发送
+     * @param log
+     */
     public static void sendLogStream(String log){
         try{
             //不同的日志类型对应不同的URL

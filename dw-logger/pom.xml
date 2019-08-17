@@ -44,6 +44,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!--   排除logging使用log4j     -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

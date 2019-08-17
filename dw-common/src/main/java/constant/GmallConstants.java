@@ -1,5 +1,6 @@
 package constant;
 
+//常用常量
 public class GmallConstants {
 
     public static final String KAFKA_TOPIC_STARTUP="GMALL_STARTUP";

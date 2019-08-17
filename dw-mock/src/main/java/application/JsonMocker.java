@@ -25,7 +25,8 @@ public class JsonMocker {
     Date startTime = null;
     Date endTime = null;
 
-    RanOpt[] areaOpts = {new RanOpt("beijing", 10),
+    RanOpt[] areaOpts = {
+            new RanOpt("beijing", 10),
             new RanOpt("shanghai", 10), new RanOpt("guangdong", 20), new RanOpt("hebei", 5),
             new RanOpt("heilongjiang", 5), new RanOpt("shandong", 5), new RanOpt("tianjin", 5),
             new RanOpt("shan3xi", 5), new RanOpt("shan1xi", 5), new RanOpt("sichuan", 5)
@@ -34,22 +35,26 @@ public class JsonMocker {
 
     String appId = "gmall2019";
 
-    RanOpt[] vsOpts = {new RanOpt("1.2.0", 50), new RanOpt("1.1.2", 15),
+    RanOpt[] vsOpts = {
+            new RanOpt("1.2.0", 50), new RanOpt("1.1.2", 15),
             new RanOpt("1.1.3", 30),
             new RanOpt("1.1.1", 5)
     };
 
     RandomOptionGroup<String> vsOptionGroup = new RandomOptionGroup(vsOpts);
 
-    RanOpt[] eventOpts = {new RanOpt("addFavor", 10), new RanOpt("addComment", 30),
+    RanOpt[] eventOpts = {
+            new RanOpt("addFavor", 10), new RanOpt("addComment", 30),
             new RanOpt("addCart", 20), new RanOpt("clickItem", 40)
     };
 
     RandomOptionGroup<String> eventOptionGroup = new RandomOptionGroup(eventOpts);
 
-    RanOpt[] channelOpts = {new RanOpt("xiaomi", 10), new RanOpt("huawei", 20),
-            new RanOpt("wandoujia", 30), new RanOpt("360", 20), new RanOpt("tencent", 20)
-            , new RanOpt("baidu", 10), new RanOpt("website", 10)
+    RanOpt[] channelOpts = {
+            new RanOpt("xiaomi", 10), new RanOpt("huawei", 20),
+            new RanOpt("wandoujia", 30), new RanOpt("360", 20),
+            new RanOpt("tencent", 20), new RanOpt("baidu", 10),
+            new RanOpt("website", 10)
     };
 
     RandomOptionGroup<String> channelOptionGroup = new RandomOptionGroup(channelOpts);
@@ -124,14 +129,14 @@ public class JsonMocker {
              `area` string COMMENT '城市'
              */
 
-
+        //mid编号为1-500随机数
         String mid = "mid_" + RandomNum.getRandInt(1, 500);
         String uid = "" + RandomNum.getRandInt(1, 500);
         String os = osOptionGroup.getRandomOpt().getValue();
         String appid = this.appId;
         String area = areaOptionGroup.getRandomOpt().getValue();
         String vs = vsOptionGroup.getRandomOpt().getValue();
-        //long ts= logDateUtil.getRandomDate().getTime();
+//        long ts= logDateUtil.getRandomDate().getTime();
         String ch = os.equals("ios") ? "appstore" : channelOptionGroup.getRandomOpt().getValue();
 
 
@@ -149,8 +154,10 @@ public class JsonMocker {
 
     public static void genLog() {
         JsonMocker jsonMocker = new JsonMocker();
+        //每次生成100W条模拟日志
         jsonMocker.startupNum = 1000000;
         for (int i = 0; i < jsonMocker.startupNum; i++) {
+            //初始化一条启动日志JSON串
             String startupLog = jsonMocker.initStartupLog();
             jsonMocker.sendLog(startupLog);
             while (!jsonMocker.isQuitGroup.getRandomOpt().getValue()) {
