@@ -16,7 +16,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import redis.clients.jedis.Jedis
-import utils.MyKafkaUtil
+import utils.{MyKafkaUtil, RedisUtil}
 
 object DauApplication {
 
@@ -38,7 +38,7 @@ object DauApplication {
 
     //转换结构，将json转换成样例类并将时间戳转换为日期，添加Date和Hour
     val startupLogDStream: DStream[StartUpLog] = inputDStream.map {
-      record => {
+      record =>{
         //提取json字符串内容
         val startupJsonString: String = record.value()
         //解析Json
@@ -53,6 +53,7 @@ object DauApplication {
 
         startupLog
       }
+
     }
 
 
@@ -64,11 +65,12 @@ object DauApplication {
     //transform作用：一个批次执行一次；降低查询频率
     val filterDStream: DStream[StartUpLog] = startupLogDStream.transform {
       rdd => {
-        println("过滤前数据量： " + rdd.count())
 
         //每个执行周期查询Redis获取清单，通过广播变量发送到Executor
+        println("过滤前数据量： " + rdd.count())
+
         //建立Redis连接
-        val jedis: Jedis = new Jedis("hadoop102", 6379)
+        val jedis: Jedis = RedisUtil.getJedisClient
 
         //取当前系统时间
         val dauKey: String = "dau: " + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
@@ -81,7 +83,7 @@ object DauApplication {
 
         //过滤数据
         val filteredRDD: RDD[StartUpLog] = rdd.filter {
-          //TODO ？？取出的集合中是否包含传入的mid
+          //日志数据mid和Redis中数据对比,看是否包含
           startupLog => !dauBC.value.contains(startupLog.mid)
         }
 
@@ -106,7 +108,7 @@ object DauApplication {
         rdd.foreachPartition {
           startupItr => {
             //建立redis连接,在executor中创建连接，一次
-            val jedis: Jedis = new Jedis("hadoop102", 6379)
+            val jedis: Jedis = RedisUtil.getJedisClient
 
             for (log <- startupItr) {
               //设计key，dau:2019-08-13 value
