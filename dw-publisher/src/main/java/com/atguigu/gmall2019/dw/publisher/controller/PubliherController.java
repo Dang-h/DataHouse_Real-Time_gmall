@@ -47,6 +47,14 @@ public class PubliherController {
         newMidMap.put("value", 23333);
         totalList.add(newMidMap);
 
+        //"id":"order_amount","name":"新增交易额","value":1000.2 }
+        Map orderAmountMap = new HashMap();
+        orderAmountMap.put("id", "order_amount");
+        orderAmountMap.put("name", "新增交易额");
+        Double orderAmount = publisherService.getOrderAmount(date);
+        orderAmountMap.put("value", orderAmount);
+        totalList.add(orderAmountMap);
+
         //将Map转换成Json结果集返回
         return JSON.toJSONString(totalList);
     }
@@ -72,13 +80,27 @@ public class PubliherController {
 
             //转换成Json返回
             return JSON.toJSONString(dauMap);
-        } else {
-            //其他
+        } else if ("order_amount".equals(id)){
+            Map<String, Double> orderHourAmountTodayMap = publisherService.getOrderHourAmount(tdate);
+
+            String ydate = getYesterdayString(tdate);
+            Map<String, Double> orderHourAmountYDayMap = publisherService.getOrderHourAmount(ydate);
+            Map orderAmountMap = new HashMap();
+
+            orderAmountMap.put("today", orderHourAmountTodayMap);
+            orderAmountMap.put("yesterday", orderHourAmountYDayMap);
+
+            return JSON.toJSONString(orderAmountMap);
         }
 
         return null;
     }
-    
+
+    /**
+     * 获取昨天日期
+     * @param todayString
+     * @return
+     */
     private  String getYesterdayString(String todayString){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

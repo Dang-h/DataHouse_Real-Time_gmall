@@ -1,6 +1,8 @@
 package com.atguigu.gmall2019.dw.publisher.service.impl;
 
+import com.atguigu.gmall2019.dw.publisher.bean.OrderHourAmount;
 import com.atguigu.gmall2019.dw.publisher.mapper.DauMapper;
+import com.atguigu.gmall2019.dw.publisher.mapper.OrderMapper;
 import com.atguigu.gmall2019.dw.publisher.service.PublisherService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,16 @@ public class PublisherServiceImpl implements PublisherService {
     @Autowired
     DauMapper dauMapper;
 
+    @Autowired
+    OrderMapper orderMapper;
+
     @Override
     public Long getDauTotal(String date) {
 
         return dauMapper.getDauTotal(date);
     }
 
+    //日活
     @Override
     public Map<String, Long> getDauHourCount(String date) {
 
@@ -42,6 +48,24 @@ public class PublisherServiceImpl implements PublisherService {
 
         return hourMap;
     }
-}
 
-//编写一个日期-1的方法
+    //交易额
+    @Override
+    public Double getOrderAmount(String date) {
+        return orderMapper.getOrderAmount(date);
+    }
+
+    @Override
+    public Map<String, Double> getOrderHourAmount(String date) {
+
+        //把list转换成map
+        HashMap<String, Double> hourAmountMap = new HashMap<>();
+        List<OrderHourAmount> orderHourAmount = orderMapper.getOrderHourAmount(date);
+
+        //怼入数据
+        for (OrderHourAmount hourAmount : orderHourAmount) {
+            hourAmountMap.put(hourAmount.getCreateHour(), hourAmount.getSumOrderAmount());
+        }
+        return hourAmountMap;
+    }
+}

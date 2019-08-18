@@ -12,7 +12,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import utils.MyKafkaUtil
 
 //将订单数据从kafka的topic中取出来转存进Hbase和Phoenix
-object OderApp {
+object OrderApp {
   def main(args: Array[String]): Unit = {
 
     val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("OrderApp")
@@ -49,7 +49,7 @@ object OderApp {
     oderDStream.foreachRDD {
       rdd => {
 
-        rdd.saveToPhoenix("gmall0311_order_info",
+        rdd.saveToPhoenix("gmall2019_order_info",
           Seq("ID", "PROVINCE_ID", "CONSIGNEE", "ORDER_COMMENT",
             "CONSIGNEE_TEL", "ORDER_STATUS", "PAYMENT_WAY",
             "USER_ID", "IMG_URL", "TOTAL_AMOUNT", "EXPIRE_TIME",

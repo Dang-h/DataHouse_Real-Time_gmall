@@ -94,6 +94,7 @@ public class HttpClientUtil {
             try {
                 response.close();
             } catch (IOException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -125,6 +126,7 @@ public class HttpClientUtil {
             try {
                 response.close();
             } catch (IOException e) {
+                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

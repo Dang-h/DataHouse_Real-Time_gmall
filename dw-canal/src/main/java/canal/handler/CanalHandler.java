@@ -1,6 +1,6 @@
 package canal.handler;
 
-import canal.utils.KafkaSender;
+import canal.utils.myKafkaSender;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import constant.GmallConstants;
@@ -56,6 +56,6 @@ public class CanalHandler {
             jsonObject.put(column.getName(), column.getValue());
         }
         String rowJSON = jsonObject.toJSONString();
-        KafkaSender.send(topic, rowJSON);
+        myKafkaSender.send(topic, rowJSON);
     }
 }
