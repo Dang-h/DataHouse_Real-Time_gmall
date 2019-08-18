@@ -32,7 +32,6 @@ public class LoggerController {
         jsonObject.put("ts", System.currentTimeMillis());
 
         // 1 写日志 （用于离线数据采集）
-        //TODO 补充配置文件log4j.properties 到resources
         String jsonString = jsonObject.toJSONString();
         //通过注解@Slf4j自动生成声明
         //info：日志级别，对应log4j

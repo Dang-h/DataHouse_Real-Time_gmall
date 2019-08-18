@@ -1,6 +1,6 @@
 package canal.handler;
 
-import java.utils.KafkaSender;
+import canal.utils.KafkaSender;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.otter.canal.protocol.CanalEntry;
 import constant.GmallConstants;
