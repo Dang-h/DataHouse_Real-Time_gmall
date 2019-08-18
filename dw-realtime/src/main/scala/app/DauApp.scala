@@ -19,7 +19,7 @@ import redis.clients.jedis.Jedis
 import utils.{MyKafkaUtil, RedisUtil}
 
 //处理日活用户（daily active user）数据
-object DauApplication {
+object DauApp {
 
   def main(args: Array[String]): Unit = {
     val sparkConf: SparkConf = new SparkConf().setAppName("dau_app").setMaster("local[*]")
