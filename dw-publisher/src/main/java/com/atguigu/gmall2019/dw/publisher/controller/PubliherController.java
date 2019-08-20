@@ -78,6 +78,7 @@ public class PubliherController {
             dauMap.put("today", dauHourCountTodayMap);
             dauMap.put("yesterday", dauHourCountYDayMap);
 
+
             //转换成Json返回
             return JSON.toJSONString(dauMap);
         } else if ("order_amount".equals(id)){
